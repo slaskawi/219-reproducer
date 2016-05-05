@@ -22,18 +22,19 @@
  */
 package org.infinispan.cdi.test.event;
 
+import org.infinispan.notifications.Listener;
 import org.infinispan.notifications.cachelistener.event.CacheEntryCreatedEvent;
 import org.infinispan.notifications.cachelistener.event.CacheEntryRemovedEvent;
+import org.infinispan.notifications.cachemanagerlistener.annotation.CacheStarted;
 import org.infinispan.notifications.cachemanagerlistener.event.CacheStartedEvent;
 import org.infinispan.notifications.cachemanagerlistener.event.CacheStoppedEvent;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 
 /**
  * @author Pete Muir
  */
-@ApplicationScoped
+@Listener
 public class Cache1Observers {
 
    private CacheStartedEvent cacheStartedEvent;
@@ -51,6 +52,7 @@ public class Cache1Observers {
    /**
     * Observe the cache started event for the cache associated with @Cache1
     */
+   @CacheStarted
    void observeCacheStarted(@Observes @Cache1 CacheStartedEvent event) {
       System.out.println("observeCacheStarted " + event);
       this.cacheStartedEventCount++;

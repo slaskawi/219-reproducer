@@ -51,30 +51,12 @@ public class CacheEventIT {
    @PostConstruct
    public void testSmallCache() {
       System.out.println("#### SINGLETON START ####");
-      // Put something into the cache, ensure it is started
+
+      Cache1Observers observer = new Cache1Observers();
+      cache1.addListener(observer);
+
       cache1.put("pete", "Edinburgh");
       assertEquals(cache1.get("pete"), "Edinburgh");
-      assertEquals(observers1.getCacheStartedEventCount(), 1);
-      assertEquals(observers1.getCacheStartedEvent().getCacheName(), "cache1");
-      assertEquals(observers1.getCacheEntryCreatedEventCount(), 1);
-      assertEquals(observers1.getCacheEntryCreatedEvent().getKey(), "pete");
-
-      // Check cache isolation for events
-      cache2.put("mircea", "London");
-      assertEquals(cache2.get("mircea"), "London");
-      assertEquals(observers2.getCacheStartedEventCount(), 1);
-      assertEquals(observers2.getCacheStartedEvent().getCacheName(), "cache2");
-
-      // Remove something
-      cache1.remove("pete");
-      assertEquals(observers1.getCacheEntryRemovedEventCount(), 1);
-      assertEquals(observers1.getCacheEntryRemovedEvent().getKey(), "pete");
-      assertEquals(observers1.getCacheEntryRemovedEvent().getValue(), "Edinburgh");
-
-      // Manually stop cache1 to check that we are notified
-      assertEquals(observers1.getCacheStoppedEventCount(), 0);
-      cache1.stop();
-      assertEquals(observers1.getCacheStoppedEventCount(), 1);
-      assertEquals(observers1.getCacheStoppedEvent().getCacheName(), "cache1");
+      assertEquals(1, observer.getCacheStartedEventCount());
    }
 }
